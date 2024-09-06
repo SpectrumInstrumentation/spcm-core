@@ -1,0 +1,54 @@
+[build-system]
+requires = ["setuptools", "wheel", "versioneer[toml]"]
+build-backend = "setuptools.build_meta"
+
+[project]
+dynamic = ["version"]
+name = "spcm_core"
+authors = [
+  { name='Spectrum Instrumentation GmbH', email='info@spec.de' },
+]
+description = "Low-level Python API Package for Spectrum Instrumentation GmbH cards"
+readme = "README.md"
+requires-python = ">=2.6"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: Microsoft :: Windows",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 2.6",
+    "Programming Language :: Python :: 2.7",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering",
+    "Topic :: System :: Hardware",
+]
+
+
+[project.urls]
+Homepage = "https://spectrum-instrumentation.com/"
+API = "https://spectruminstrumentation.github.io/spcm_core/spcm_core.html"
+Repository = "https://github.com/SpectrumInstrumentation/spcm_core"
+# Examples = "https://github.com/SpectrumInstrumentation/spcm_core/tree/master/src/examples"
+"Knowledge Base" = "https://spectrum-instrumentation.com/support/knowledgebase/index.php"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["spcm_core"] 
+namespaces = false
+
+[tool.versioneer]
+VCS = "git"
+style = "pep440"
+versionfile_source = "src/spcm_core/_version.py"
+tag_prefix = "v"
