@@ -1,0 +1,4 @@
+spcm_core
+numpy
+matplotlib
+cupy-cuda12x

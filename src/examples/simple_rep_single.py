@@ -26,8 +26,7 @@
 #
 
 
-from pyspcm import *
-from spcm_tools import *
+from spcm_core import *
 import sys
 
 #
@@ -39,7 +38,7 @@ import sys
 # open card
 # uncomment the second line and replace the IP address to use remote
 # cards like in a generatorNETBOX
-hCard = spcm_hOpen(create_string_buffer(b'/dev/spcm0'))
+hCard = spcm_hOpen(create_string_buffer(b'/dev/spcm1'))
 # hCard = spcm_hOpen(create_string_buffer(b'TCPIP::192.168.1.10::inst0::INSTR'))
 if not hCard:
     sys.stdout.write("no card found...\n")
