@@ -1,7 +1,6 @@
-A high-level, general purpose, object-oriented Python package to control Spectrum Instrumentation GmbH devices.
+A low-level Python API package for interfacing with Spectrum Instrumentation GmbH devices.
 
-`spcm` can connect to digitizers, AWGs, StarHubs and Netboxes. The package contains classes for controlling specific
-cards and synchronization devices (StarHub) as well as for specific functionality, such as DDS and TimeStamps. 
+`spcm_core` can handle individual cards, StarHubs, groups of cards and Netboxes
 
 
 # Notes
@@ -11,7 +10,7 @@ cards and synchronization devices (StarHub) as well as for specific functionalit
 
 # See also
 * [Spectrum Instrumentation GmbH](https://spectrum-instrumentation.com/)
-* [GitHub](https://github.com/SpectrumInstrumentation/spcm_core)
-* [PyPI](https://pypi.org/project/spcm_core/)
-* [Examples](https://github.com/SpectrumInstrumentation/spcm_core/tree/master/src/examples)
-* [Reference API](https://spectruminstrumentation.github.io/spcm_core/spcm_core.html)
+* [GitHub](https://github.com/SpectrumInstrumentation/spcm-core)
+* [PyPI](https://pypi.org/project/spcm-core/)
+* [Examples](https://github.com/SpectrumInstrumentation/spcm-core/tree/master/src/examples)
+* [Reference API](https://spectruminstrumentation.github.io/spcm-core/spcm-core.html)
