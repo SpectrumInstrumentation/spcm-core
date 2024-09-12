@@ -37,9 +37,9 @@ classifiers = [
 
 [project.urls]
 Homepage = "https://spectrum-instrumentation.com/"
-API = "https://spectruminstrumentation.github.io/spcm_core/spcm_core.html"
-Repository = "https://github.com/SpectrumInstrumentation/spcm_core"
-# Examples = "https://github.com/SpectrumInstrumentation/spcm_core/tree/master/src/examples"
+API = "https://spectruminstrumentation.github.io/spcm-core/spcm_core.html"
+Repository = "https://github.com/SpectrumInstrumentation/spcm-core"
+# Examples = "https://github.com/SpectrumInstrumentation/spcm-core/tree/master/src/examples"
 "Knowledge Base" = "https://spectrum-instrumentation.com/support/knowledgebase/index.php"
 
 [tool.setuptools.packages.find]

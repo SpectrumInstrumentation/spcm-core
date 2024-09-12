@@ -1,4 +1,4 @@
-name: spcm-pages
+name: spcm-core-pages
 
 on:
   push:
@@ -42,7 +42,7 @@ jobs:
         git switch docs
         git status
         git rebase ${{ github.ref_name }}-branch
-        PDOC_ALLOW_EXEC=1 pdoc ./src/spcm -d numpy -o ./docs --logo "https://spectrum-instrumentation.com/img/logo-complete.png" --logo-link "https://spectrum-instrumentation.com/" --favicon https://spectrum-instrumentation.com/img/favicon.ico --footer-text "Spectrum Instrumentation GmbH" --mermaid --no-search --show-source
+        PDOC_ALLOW_EXEC=1 pdoc ./src/spcm_core -d numpy -o ./docs --logo "https://spectrum-instrumentation.com/img/logo-complete.png" --logo-link "https://spectrum-instrumentation.com/" --favicon https://spectrum-instrumentation.com/img/favicon.ico --footer-text "Spectrum Instrumentation GmbH" --mermaid --no-search --show-source
         git add .
         git commit -m 'Automatic documentation update ${{ github.ref_name }}'
     - name: Push changes
