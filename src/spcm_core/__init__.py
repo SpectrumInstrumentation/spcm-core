@@ -9,6 +9,10 @@ from .constants import *
 from .pyspcm import *
 from .spcm_tools import *
 
+from . import constants
+from . import regs
+from . import spcerr as errors
+
 # Versioning support using versioneer
 from . import _version
 __version__ = _version.get_versions()['version']
