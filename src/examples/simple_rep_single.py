@@ -28,6 +28,7 @@
 
 from spcm_core import *
 import sys
+import math
 
 #
 # **************************************************************************
@@ -38,7 +39,7 @@ import sys
 # open card
 # uncomment the second line and replace the IP address to use remote
 # cards like in a generatorNETBOX
-hCard = spcm_hOpen(create_string_buffer(b'/dev/spcm1'))
+hCard = spcm_hOpen(create_string_buffer(b'/dev/spcm0'))
 # hCard = spcm_hOpen(create_string_buffer(b'TCPIP::192.168.1.10::inst0::INSTR'))
 if not hCard:
     sys.stdout.write("no card found...\n")
@@ -57,6 +58,12 @@ lSerialNumber = int32(0)
 spcm_dwGetParam_i32(hCard, SPC_PCISERIALNO, byref(lSerialNumber))
 lFncType = int32(0)
 spcm_dwGetParam_i32(hCard, SPC_FNCTYPE, byref(lFncType))
+lNumModules = int32(0)
+spcm_dwGetParam_i32(hCard, SPC_MIINST_MODULES, byref(lNumModules))
+lNumChPerModule = int32(0)
+spcm_dwGetParam_i32 (hCard, SPC_MIINST_CHPERMODULE, byref(lNumChPerModule))
+
+lMaxChannels = lNumModules.value * lNumChPerModule.value
 
 if lFncType.value == SPCM_TYPE_AO or lFncType.value == SPCM_TYPE_DO or lFncType.value == SPCM_TYPE_DIO:
     sys.stdout.write("Found: {0} sn {1:05d}\n".format(sCardName, lSerialNumber.value))
@@ -75,7 +82,7 @@ spcm_dwSetParam_i32(hCard, SPC_CLOCKOUT,   0)
 
 # set up the mode
 if lFncType.value == SPCM_TYPE_AO:
-    qwChEnable = uint64(1)
+    qwChEnable = (0x1 << lMaxChannels) - 1
 else:
     qwChEnable = 0xFFFFFFFF  # enable 32 channels
 llMemSamples = int64(KILO_B(64))
@@ -89,6 +96,8 @@ lSetChannels = int32(0)
 spcm_dwGetParam_i32(hCard, SPC_CHCOUNT,     byref(lSetChannels))
 lBytesPerSample = int32(0)
 spcm_dwGetParam_i32(hCard, SPC_MIINST_BYTESPERSAMPLE,  byref(lBytesPerSample))
+lMaxADC = int32(0)
+spcm_dwGetParam_i32(hCard, SPC_MIINST_MAXADCVALUE,  byref(lMaxADC))
 
 # setup the trigger mode
 # (SW trigger, no output)
@@ -102,9 +111,15 @@ spcm_dwSetParam_i32(hCard, SPC_TRIGGEROUT,       0)
 
 # set up the analog output channels
 if lFncType.value == SPCM_TYPE_AO:
-    lChannel = int32(0)
-    spcm_dwSetParam_i32(hCard, SPC_AMP0 + lChannel.value * (SPC_AMP1 - SPC_AMP0), int32(1000))
-    spcm_dwSetParam_i64(hCard, SPC_ENABLEOUT0 + lChannel.value * (SPC_ENABLEOUT1 - SPC_ENABLEOUT0), int32(1))
+    lMaxGain = int32(0)
+    spcm_dwGetParam_i32 (hCard, SPC_READAOGAINMAX, byref(lMaxGain))
+    lAmplitude = int32(1000)
+    if lAmplitude.value > lMaxGain.value:
+        lAmplitude = lMaxGain
+
+    for lChIdx in range(0, lSetChannels.value, 1):
+        spcm_dwSetParam_i32(hCard, SPC_AMP0 + 100 * lChIdx, lAmplitude)
+        spcm_dwSetParam_i64(hCard, SPC_ENABLEOUT0 + 100 * lChIdx, int32(1))
 
 # setup software buffer
 if lFncType.value == SPCM_TYPE_AO:
@@ -124,10 +139,12 @@ else:
 
 # calculate the data
 if lFncType.value == SPCM_TYPE_AO:
-    # simple ramp for analog output cards
+    # sine wave for analog output cards
     pnBuffer = cast(pvBuffer, ptr16)
-    for i in range(0, llMemSamples.value, 1):
-        pnBuffer[i] = i
+    for lChIdx in range(0, lSetChannels.value, 1):
+        for lDataIdx in range(0, llMemSamples.value, 1):
+            dVal = (lMaxADC.value - 1) * math.sin(2*math.pi*lDataIdx/(llMemSamples.value / (lChIdx + 1)))
+            pnBuffer[lSetChannels.value * lDataIdx + lChIdx] = int(dVal)
 else:
     # a tree for digital output cards
     pdwBuffer = cast(pvBuffer, uptr32)
