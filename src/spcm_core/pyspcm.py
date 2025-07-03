@@ -91,7 +91,7 @@ try:
 
     # Linux
     elif os.name == 'posix':
-        sys.stdout.write("Python Version: {0} on Linux\n\n".format (platform.python_version()))
+        # sys.stdout.write("Python Version: {0} on Linux\n\n".format (platform.python_version()))
 
         # use cdll because all driver access functions use cdecl calling convention under linux
         spcmDll = cdll.LoadLibrary ("libspcm_linux.so")
