@@ -265,40 +265,43 @@ try:
     spcm_dwSendIDNRequest.argtype = [POINTER(c_char_p), uint32, uint32]
     spcm_dwSendIDNRequest.restype = uint32
 
+    # Overloading the original C functions with Python-friendly versions
+    def spcm_dwSetParam_i64(hDrv, lReg, Val):
+        try:
+            llVal = int64(Val.value)
+        except AttributeError:
+            llVal = int64(Val)
+        return spcm_dwSetParam_i64_ (hDrv, lReg, llVal)
+
+    def spcm_dwSetParam_d64(hDrv, lReg, Val):
+        try:
+            dVal = double(Val.value)
+        except AttributeError:
+            dVal = double(Val)
+        return spcm_dwSetParam_d64_ (hDrv, lReg, dVal)
+
+
+    def spcm_dwDefTransfer_i64(hDrv, dwBufferType, dwDirection, notify, pvBuffer, offs, buf_len):
+        try:
+            dwNotify = uint64(notify.value)
+        except AttributeError:
+            dwNotify = uint64(notify)
+        try:
+            qwOffs = uint64(offs.value)
+        except AttributeError:
+            qwOffs = uint64(offs)
+        try:
+            qwBufLen = uint64(buf_len.value)
+        except AttributeError:
+            qwBufLen = uint64(buf_len)
+        return spcm_dwDefTransfer_i64_ (hDrv, dwBufferType, dwDirection, dwNotify, pvBuffer, qwOffs, qwBufLen)
 
 except OSError as e:
-    raise Exception("The Spectrum Instrumentation device driver is not found. Please install the driver and try again.\nFor the newest drivers, see https://spectrum-instrumentation.com/support/downloads.php")
+    if os.environ.get("SPCM_NO_DLL"):
+        print("The Spectrum Instrumentation device driver is not found. Some functionality might not work.")
+    else:
+        raise Exception("The Spectrum Instrumentation device driver is not found. Please install the driver and try again.\nFor the newest drivers, see https://spectrum-instrumentation.com/support/downloads.php")
 
 except AttributeError as e:
     minimum_driver_version = "7.0"
     raise Exception("Driver version not supported. Minimum version required: {}.\n For the newest drivers, see https://spectrum-instrumentation.com/support/downloads.php".format(minimum_driver_version))
-
-def spcm_dwSetParam_i64(hDrv, lReg, Val):
-    try:
-        llVal = int64(Val.value)
-    except AttributeError:
-        llVal = int64(Val)
-    return spcm_dwSetParam_i64_ (hDrv, lReg, llVal)
-
-def spcm_dwSetParam_d64(hDrv, lReg, Val):
-    try:
-        dVal = double(Val.value)
-    except AttributeError:
-        dVal = double(Val)
-    return spcm_dwSetParam_d64_ (hDrv, lReg, dVal)
-
-
-def spcm_dwDefTransfer_i64(hDrv, dwBufferType, dwDirection, notify, pvBuffer, offs, buf_len):
-    try:
-        dwNotify = uint64(notify.value)
-    except AttributeError:
-        dwNotify = uint64(notify)
-    try:
-        qwOffs = uint64(offs.value)
-    except AttributeError:
-        qwOffs = uint64(offs)
-    try:
-        qwBufLen = uint64(buf_len.value)
-    except AttributeError:
-        qwBufLen = uint64(buf_len)
-    return spcm_dwDefTransfer_i64_ (hDrv, dwBufferType, dwDirection, dwNotify, pvBuffer, qwOffs, qwBufLen)

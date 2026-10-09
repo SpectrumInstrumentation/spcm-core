@@ -35,5 +35,8 @@ try:
     version_str = bytes("Python package spcm_core v{}".format(version_tag), "utf-8")
     version_ptr = create_string_buffer(version_str)
     dwErr = spcm_dwSetParam_ptr(None, SPC_WRITE_TO_LOG, version_ptr, len(version_str))
-except OSError as e:
-    print(e)
+except (OSError, NameError) as e:
+    if os.environ.get("SPCM_NODLL") == "True":
+        print("DLL not loading and 'SPCM_NODLL' is set, skipping writing spcm version to log")
+    else:
+        print(e)
